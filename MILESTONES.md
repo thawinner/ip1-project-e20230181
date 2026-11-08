@@ -29,7 +29,7 @@ I cut stock counts that storekeepers submit and the manager approves. They neede
 ## M1 Frontend prototype (week 5)
 
 - [x] Wireframes (photo or tool) of the 3–5 main screens in `docs/wireframes/`
-- [ ] Component tree per screen in `docs/components.md` (components, props, events, who owns each piece of state)
+- [x] Component tree per screen in `docs/components.md` (components, props, events, who owns each piece of state)
 - [ ] Vue 3 + TypeScript app created with Vite in `frontend/`; strict mode on; ESLint passes
 - [ ] Entities in `src/types.ts`
 - [ ] At least 4 routes, including a detail page with a route parameter, and a 404 page
