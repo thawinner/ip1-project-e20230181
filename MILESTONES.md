@@ -31,7 +31,7 @@ I cut stock counts that storekeepers submit and the manager approves. They neede
 - [x] Wireframes (photo or tool) of the 3–5 main screens in `docs/wireframes/`
 - [x] Component tree per screen in `docs/components.md` (components, props, events, who owns each piece of state)
 - [x] Vue 3 + TypeScript app created with Vite in `web/`; strict mode on; ESLint passes
-- [ ] Entities in `src/types.ts`
+- [x] Entities in `src/types.ts`
 - [ ] At least 4 routes, including a detail page with a route parameter, and a 404 page
 - [ ] Route guard for the manager-only pages
 - [ ] At least one form with client-side validation and a message under each field
