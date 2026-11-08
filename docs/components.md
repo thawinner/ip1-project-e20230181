@@ -1,6 +1,6 @@
 # Components
 
-Component tree for the main screens of the M1 frontend prototype (Vue 3 + TypeScript, `frontend/`).
+Component tree for the main screens of the M1 frontend prototype (Vue 3 + TypeScript, `web/`).
 
 Sources: the stories, entities and messages come from `PROPOSAL.md`; the layout follows the wireframes in
 `docs/wireframes/`; what M1 must include comes from `MILESTONES.md`.
