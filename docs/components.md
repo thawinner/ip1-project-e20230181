@@ -30,17 +30,17 @@ logging in, so login goes to `/dashboard` or `/manager/dashboard`, and the home 
 
 | Store | State | Actions / getters | Why it is a store |
 |---|---|---|---|
-| `useAuthStore` | `user: User \| null`, `token` | `login(username, password)`, `logout()`; `isManager` | The top bar, the home menu, the dashboard and the route guard all need to know who is logged in. |
-| `useProductStore` | `products: Product[]`, `loading`, `error` | `fetchProducts()`, `fetchProduct(id)`; `lowStock` (quantity ≤ reorderLevel) | Products, the product page, the dashboard and Approvals all show products; a saved movement must change the quantity on every page. |
-| `useCatalogStore` | `categories: Category[]`, `suppliers: Supplier[]` | `fetchAll()` | Products are grouped and filtered by category and supplier; a PURCHASE needs a supplier (story 4). Loaded once, used on many pages. |
-| `useMovementStore` | `movements: StockMovement[]`, `loading`, `error`, `lastDelivery: { supplierId, invoiceNo } \| null` | `fetchByProduct(productId)`, `fetchMine()`, `fetchPending()`, `createMovement(input)`, `approve(id)`, `reject(id, reason)`; `pendingCount` | A new movement changes the product's quantity, the dashboard and the approvals list. `lastDelivery` keeps the supplier and invoice of the delivery you are unpacking for the next product, so it must outlive one product page. |
+| `useAuthStore` | `user: User \| null`, `token` (saved in `localStorage`) | `login(input)`, `logout()`; `isLoggedIn`, `isManager`, `homeRoute` | The top bar, the home menu, the dashboard and the route guard all need to know who is logged in. |
+| `useProductStore` | `page: Page<Product>`, `loading`, `error`; `all: Product[]`; `current`, `currentLoading`, `currentError`, `currentNotFound` | `fetchPage(query)`, `fetchAll()`, `fetchOne(id)`, `replace(product)`, `byId(id)`; `lowStock` (quantity ≤ reorderLevel) | Products, the product page, the dashboard and Approvals all show products; a saved movement must change the quantity on every page. |
+| `useCatalogStore` | `categories`, `suppliers`, `users`, `loaded`, `error` | `fetchAll()` (once), `fetchUsers()` (manager); `categoryName(id)`, `supplierName(id)`, `userName(id)` | Products are grouped and filtered by category and supplier; a PURCHASE needs a supplier (story 4); Approvals shows who recorded each write-off. Loaded once, used on many pages. |
+| `useMovementStore` | `forProduct`, `mine`, `recent`, `pending`, `loading`, `error`, `saving`, `lastDelivery: { supplierId, invoiceNo } \| null` | `fetchByProduct(productId)`, `fetchMine()`, `fetchRecent()`, `fetchPending()`, `create(input)`, `approve(id)`, `reject(id, reason)`; `pendingCount` | A new movement changes the product's quantity, the dashboard and the approvals list. `lastDelivery` keeps the supplier and invoice of the delivery you are unpacking for the next product, so it must outlive one product page. |
 
 Stores call the service layer in `src/api/` (`http.ts` plus `products.ts`, `movements.ts`, `categories.ts`,
 `suppliers.ts`, `users.ts`); components never call `fetch` themselves.
 
 ## App shell (every page after logging in)
 
-There is **no sidebar**. You move around with the navy top bar and the home menu.
+There is **no sidebar**. You move around with the blue top bar and the home menu.
 
 ```
 App.vue

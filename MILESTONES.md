@@ -12,6 +12,8 @@ Checklist and "explain your design" answers for each milestone. Each milestone i
 - [ ] M5 Deployed (week 14)
 - [ ] Final presentation and defence (week 16, code frozen at tag `final` end of week 15)
 
+TODO
+
 ## M0 Proposal (week 3)
 
 - [x] `PROPOSAL.md` follows the template in Appendix A
@@ -26,6 +28,8 @@ Checklist and "explain your design" answers for each milestone. Each milestone i
 
 I cut stock counts that storekeepers submit and the manager approves. They needed a sixth entity (StockCount), two more screens and a second approval flow next to write-offs, which is too much for one person in the time we have. The manager now adjusts stock directly after counting a product, with a note (story 8), so the counts can still be corrected.
 
+TODO
+
 ## M1 Frontend prototype (week 5)
 
 - [x] Wireframes (photo or tool) of the 3–5 main screens in `docs/wireframes/`
@@ -36,13 +40,16 @@ I cut stock counts that storekeepers submit and the manager approves. They neede
 - [ ] Route guard for the manager-only pages
 - [ ] At least one form with client-side validation and a message under each field
 - [x] `db.json` shaped like the real API (one array per entity, linked by ids); `json-server` with an `api` script
-- [ ] A Pinia store and a service layer (`src/api/http.ts` plus one file per resource) calling the mock API
+- [x] A Pinia store and a service layer (`src/api/http.ts` plus one file per resource) calling the mock API
 - [ ] Loading, empty, error and success states visible
 - [ ] README section on how to run it (`npm run api`, `npm run dev`)
 - [ ] Work on the `frontend-setup` branch, merged by pull request
 - [ ] Tagged `m1`
 
 **What state lives in the store and what stays inside a component? Why?**
+
+The store keeps what several pages need or what must survive changing pages: the logged-in user and token (top bar, dashboard, route guard), the products (list, product page, dashboard, approvals), categories and suppliers, the movements and the pending write-offs, and the delivery being unpacked (lastDelivery), so the next product's form is filled in. One copy means that after recording a movement, every page shows the new quantity.
+A component keeps what only it uses and can throw away: the text typed in a form, the field error messages, the search text and filters, cards or list view, and whether a menu or dialog is open. Keeping these local keeps the store small, and each page starts clean.
 
 TODO
 
