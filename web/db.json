@@ -1054,5 +1054,32 @@
       "rejectReason": null,
       "createdAt": "2026-11-08T09:10:00"
     }
+  ],
+  "passwords": [
+    {
+      "id": 1,
+      "userId": 1,
+      "password": "shopstock1"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "password": "shopstock1"
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "password": "shopstock1"
+    },
+    {
+      "id": 4,
+      "userId": 4,
+      "password": "shopstock1"
+    },
+    {
+      "id": 5,
+      "userId": 5,
+      "password": "shopstock1"
+    }
   ]
 }

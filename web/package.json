@@ -12,7 +12,7 @@
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "api": "json-server --watch db.json --port 3001 --delay 400"
+    "api": "json-server --watch db.json --port 3001 --delay 400 --fks _fk"
   },
   "dependencies": {
     "pinia": "^4.0.3",
@@ -34,7 +34,6 @@
     "oxlint": "~1.82.0",
     "typescript": "~6.0.0",
     "vite": "^8.2.2",
-    "vite-plugin-vue-devtools": "^8.2.1",
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.11"
   },
