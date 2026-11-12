@@ -16,7 +16,7 @@ const router = useRouter()
       </header>
       <p>This page does not exist.</p>
       <footer>
-        <RouterLink :to="auth.isLoggedIn ? '/dashboard' : '/login'" class="btn btn-primary">
+        <RouterLink :to="auth.isLoggedIn ? '/' : '/login'" class="btn btn-primary">
           Go to the start page
         </RouterLink>
         <button type="button" class="btn btn-outline" @click="router.back()">Go back</button>

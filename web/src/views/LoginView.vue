@@ -33,7 +33,7 @@ async function login(input: LoginInput) {
   error.value = null
   try {
     await auth.login(input)
-    await router.replace(redirectTarget() ?? '/dashboard')
+    await router.replace(redirectTarget() ?? '/')
   } catch (e) {
     error.value = errorMessage(e)
   } finally {

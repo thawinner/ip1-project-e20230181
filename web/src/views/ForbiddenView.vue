@@ -16,7 +16,7 @@ import AppIcon from '@/components/AppIcon.vue'
         <p class="muted">You are logged in as a storekeeper. Ask your manager if you need it.</p>
       </div>
       <footer>
-        <RouterLink to="/dashboard" class="btn btn-primary">Go to the start page</RouterLink>
+        <RouterLink to="/" class="btn btn-primary">Go to the start page</RouterLink>
       </footer>
     </section>
   </div>

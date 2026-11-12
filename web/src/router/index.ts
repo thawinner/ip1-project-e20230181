@@ -44,7 +44,8 @@ router.beforeEach((to) => {
   if (!to.meta.public && !auth.isLoggedIn) {
     return { name: 'login', query: to.fullPath === '/' ? {} : { redirect: to.fullPath } }
   }
-  if (to.name === 'login' && auth.isLoggedIn) return '/dashboard'
+  // Story 2: you start on the home menu, which shows your role's sections
+  if (to.name === 'login' && auth.isLoggedIn) return '/'
   accessDenied.value = Boolean(to.meta.managerOnly && !auth.isManager)
 })
 

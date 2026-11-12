@@ -14,7 +14,7 @@ Small shops in Phnom Penh keep extra stock in a storage room and track it in a n
 1. As a manager, I want to add a storekeeper account so that a new employee can use the system.
    Accepted when: the account is created with a name, username, phone number and temporary password; a username already in use shows "This username is already taken"; the storekeeper must set a new password at first login.
 2. As a user, I want to log in so that I see the pages for my role.
-   Accepted when: each role goes to its own dashboard at /dashboard (a storekeeper sees their work today, the manager sees write-offs to approve and products to reorder); a wrong username or password shows "Invalid username or password"; a deactivated account sees "This account is deactivated".
+   Accepted when: each role goes to its own home menu at / (the sections for that role: 4 for a storekeeper, 10 for the manager), with Today one tile away at /dashboard; a wrong username or password shows "Invalid username or password"; a deactivated account sees "This account is deactivated".
 3. As a storekeeper, I want to search and filter products so that I can quickly see what is left in storage.
    Accepted when: the list shows 10 products per page; typing "coca" shows only products whose name or SKU contains "coca"; an empty result shows "No products match your search".
 4. As a storekeeper, I want to record goods that arrive in storage so that the stock goes up.
