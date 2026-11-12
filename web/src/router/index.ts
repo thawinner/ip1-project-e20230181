@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import type { AppId } from '@/apps'
 import { rememberVisit } from '@/utils/lastVisit'
 import LoginView from '@/views/LoginView.vue'
 
@@ -8,6 +9,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     public?: boolean // open without logging in
     managerOnly?: boolean // staff see the access error instead (story 10)
+    app?: AppId // the section shown in the top bar
     title?: string // the browser tab: "ShopStock · Products"
   }
 }
@@ -18,6 +20,8 @@ declare module 'vue-router' {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // The home menu (grid button in the top bar)
+    { path: '/', name: 'home', component: () => import('@/views/HomeMenuView.vue'), meta: { title: 'Home menu' } },
     { path: '/login', name: 'login', component: LoginView, meta: { public: true, title: 'Log in' } },
 
     // Any other address: the 404 page at that address
