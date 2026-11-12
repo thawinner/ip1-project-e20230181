@@ -4,6 +4,8 @@ import type { NewMovement, Product, Reason } from '@/types'
 export type MovementField = 'quantity' | 'reason' | 'note' | 'supplierId' | 'invoiceNo'
 export type MovementErrors = Partial<Record<MovementField, string>>
 
+export type AdjustErrors = Partial<Record<'counted' | 'note', string>>
+
 export const MAX_QUANTITY = 10_000
 export const MAX_INVOICE_LENGTH = 30
 
@@ -34,5 +36,17 @@ export function checkMovement(input: NewMovement, product: Product): MovementErr
     }
   }
 
+  return errors
+}
+
+// Story 8: the manager counts the shelf; the difference is saved as an adjustment
+export function checkAdjustment(counted: number, note: string, product: Product): AdjustErrors {
+  const errors: AdjustErrors = {}
+  if (!Number.isInteger(counted) || counted < 0 || counted > MAX_QUANTITY) {
+    errors.counted = 'Counted quantity must be a whole number from 0 to 10,000'
+  } else if (counted === product.quantity) {
+    errors.counted = 'No difference to adjust'
+  }
+  if (!note.trim()) errors.note = 'A note is required for an adjustment'
   return errors
 }

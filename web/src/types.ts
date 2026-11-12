@@ -100,6 +100,12 @@ export interface NewMovement {
   note: string | null
 }
 
+// What the manager types in the product form; the server keeps quantity (starts at 0), isActive and imageUrl
+export type ProductInput = Pick<
+  Product,
+  'sku' | 'name' | 'categoryId' | 'supplierId' | 'unit' | 'costPrice' | 'reorderLevel' | 'targetLevel'
+>
+
 export interface Page<T> {
   items: T[]
   total: number
