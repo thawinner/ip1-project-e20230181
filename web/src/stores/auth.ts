@@ -28,30 +28,46 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isLoggedIn = computed(() => user.value !== null)
   const isManager = computed(() => user.value?.role === 'MANAGER')
-  const homeRoute = computed(() => (isManager.value ? '/manager/dashboard' : '/dashboard'))
+  // Story 1: a temporary password must be replaced before anything else
+  const mustChangePassword = computed(() => user.value?.mustChangePassword === true)
+
+  function save() {
+    try {
+      if (user.value && token.value) localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: token.value, user: user.value }))
+      else localStorage.removeItem(STORAGE_KEY)
+    } catch {
+      // private mode: stay logged in until the tab closes
+    }
+  }
 
   async function login(input: LoginInput) {
     const result = await authApi.login(input)
     user.value = result.user
     token.value = result.token
     setToken(result.token)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(result))
-    } catch {
-      // private mode: stay logged in until the tab closes
-    }
+    save()
   }
 
   function logout() {
     user.value = null
     token.value = null
     setToken(null)
-    try {
-      localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // nothing saved
-    }
+    save()
   }
 
-  return { user, token, isLoggedIn, isManager, homeRoute, login, logout }
+  // Throws on purpose: the form shows the message under the field
+  async function changePassword(current: string, next: string, confirm: string) {
+    if (!user.value) return
+    user.value = await authApi.changePassword(user.value, current, next, confirm)
+    save()
+  }
+
+  // After the manager edits their own account: the new name shows in the top bar
+  function setUser(updated: User) {
+    if (user.value?.id !== updated.id) return
+    user.value = updated
+    save()
+  }
+
+  return { user, token, isLoggedIn, isManager, mustChangePassword, login, logout, changePassword, setUser }
 })

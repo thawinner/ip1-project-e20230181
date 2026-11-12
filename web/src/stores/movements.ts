@@ -25,6 +25,15 @@ export const useMovementStore = defineStore('movements', () => {
   // The delivery being unpacked: kept for the next product
   const lastDelivery = ref<Delivery | null>(null)
 
+  // The Moves and My moves lists (one page) and the Move page
+  const page = ref<movementsApi.MovementPage>({ items: [], total: 0, page: 1, perPage: 10, appliedValue: 0 })
+  const pageLoading = ref(false)
+  const pageError = ref<string | null>(null)
+  const current = ref<StockMovement | null>(null)
+  const currentLoading = ref(false)
+  const currentError = ref<string | null>(null)
+  const currentNotFound = ref(false)
+
   const pendingCount = computed(() => pending.value.length)
 
   function currentUser(): User {
@@ -50,6 +59,38 @@ export const useMovementStore = defineStore('movements', () => {
   const fetchRecent = () => load(recent, () => movementsApi.listRecent())
   const fetchPending = () => load(pending, movementsApi.listPending)
 
+  async function fetchPage(query: Omit<movementsApi.MovementQuery, 'userId'>, mineOnly: boolean) {
+    pageLoading.value = true
+    pageError.value = null
+    try {
+      page.value = await movementsApi.listMovements({ ...query, userId: mineOnly ? currentUser().id : undefined })
+    } catch (e) {
+      pageError.value = errorMessage(e)
+    } finally {
+      pageLoading.value = false
+    }
+  }
+
+  async function fetchOne(id: Id) {
+    currentLoading.value = true
+    currentError.value = null
+    currentNotFound.value = false
+    try {
+      current.value = await movementsApi.getMovementFor(id, currentUser())
+    } catch (e) {
+      current.value = null
+      if (e instanceof HttpError && e.status === 404) currentNotFound.value = true
+      else currentError.value = errorMessage(e)
+    } finally {
+      currentLoading.value = false
+    }
+  }
+
+  // After approve / reject: the Move page shows the new status
+  function updateCurrent(movement: StockMovement) {
+    if (current.value?.id === movement.id) current.value = movement
+  }
+
   async function refreshProduct(productId: Id) {
     useProductStore().replace(await getProduct(productId))
   }
@@ -71,9 +112,23 @@ export const useMovementStore = defineStore('movements', () => {
     }
   }
 
+  // Throws on purpose: the Adjust stock dialog shows the message under the field
+  async function adjust(productId: Id, counted: number, note: string) {
+    saving.value = true
+    try {
+      const movement = await movementsApi.adjustStock(productId, counted, note, currentUser())
+      forProduct.value = [movement, ...forProduct.value]
+      await refreshProduct(productId)
+      return movement
+    } finally {
+      saving.value = false
+    }
+  }
+
   async function approve(id: Id) {
     const movement = await movementsApi.approveMovement(id, currentUser())
     pending.value = pending.value.filter((m) => m.id !== id)
+    updateCurrent(movement)
     await refreshProduct(movement.productId)
     return movement
   }
@@ -81,6 +136,7 @@ export const useMovementStore = defineStore('movements', () => {
   async function reject(id: Id, reason: string) {
     const movement = await movementsApi.rejectMovement(id, reason, currentUser())
     pending.value = pending.value.filter((m) => m.id !== id)
+    updateCurrent(movement)
     return movement
   }
 
@@ -93,12 +149,22 @@ export const useMovementStore = defineStore('movements', () => {
     error,
     saving,
     lastDelivery,
+    page,
+    pageLoading,
+    pageError,
+    current,
+    currentLoading,
+    currentError,
+    currentNotFound,
     pendingCount,
     fetchByProduct,
     fetchMine,
     fetchRecent,
     fetchPending,
+    fetchPage,
+    fetchOne,
     create,
+    adjust,
     approve,
     reject,
   }

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import * as productsApi from '@/api/products'
 import { HttpError } from '@/api/http'
 import { errorMessage } from '@/utils/errors'
-import type { Id, Page, Product } from '@/types'
+import type { Id, Page, Product, ProductInput } from '@/types'
 
 export const useProductStore = defineStore('products', () => {
   // One page of the products list
@@ -66,6 +66,24 @@ export const useProductStore = defineStore('products', () => {
     if (current.value?.id === product.id) current.value = product
   }
 
+  // These throw on purpose: the form shows the message under the field
+  async function save(id: Id | null, input: ProductInput) {
+    const saved = id === null ? await productsApi.createProduct(input) : await productsApi.updateProduct(id, input)
+    all.value = [...all.value.filter((p) => p.id !== saved.id), saved].sort((a, b) => a.name.localeCompare(b.name))
+    replace(saved)
+    return saved
+  }
+
+  async function setArchived(id: Id, archived: boolean) {
+    replace(await productsApi.setArchived(id, archived))
+  }
+
+  async function remove(id: Id) {
+    await productsApi.deleteProduct(id)
+    all.value = all.value.filter((p) => p.id !== id)
+    if (current.value?.id === id) current.value = null
+  }
+
   function byId(id: Id) {
     return all.value.find((p) => p.id === id)
   }
@@ -84,6 +102,9 @@ export const useProductStore = defineStore('products', () => {
     fetchAll,
     fetchOne,
     replace,
+    save,
+    setArchived,
+    remove,
     byId,
   }
 })
