@@ -24,6 +24,14 @@ const router = createRouter({
     { path: '/', name: 'home', component: () => import('@/views/HomeMenuView.vue'), meta: { title: 'Home menu' } },
     { path: '/login', name: 'login', component: LoginView, meta: { public: true, title: 'Log in' } },
 
+    // Products (stories 3, 4, 5, 7)
+    {
+      path: '/products',
+      name: 'products',
+      component: () => import('@/views/ProductsView.vue'),
+      meta: { app: 'products', title: 'Products' },
+    },
+
     // Any other address: the 404 page at that address
     {
       path: '/:pathMatch(.*)*',
