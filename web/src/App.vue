@@ -5,6 +5,7 @@ import { accessDenied } from '@/router'
 import ForbiddenView from '@/views/ForbiddenView.vue'
 import TopBar from '@/components/layout/TopBar.vue'
 import ToastMessage from '@/components/ToastMessage.vue'
+import RecordDialog from '@/components/record/RecordDialog.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useCatalogStore } from '@/stores/catalog'
 import { useCounts } from '@/composables/useCounts'
@@ -41,6 +42,7 @@ watch(
     <ForbiddenView v-if="accessDenied" />
     <RouterView v-else />
   </main>
+  <RecordDialog v-if="auth.user && !auth.mustChangePassword" />
   <ToastMessage
     v-if="toast"
     :kind="toast.kind"
