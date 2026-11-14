@@ -36,12 +36,12 @@ TODO
 - [x] Component tree per screen in `docs/components.md` (components, props, events, who owns each piece of state)
 - [x] Vue 3 + TypeScript app created with Vite in `web/`; strict mode on; ESLint passes
 - [x] Entities in `src/types.ts`
-- [ ] At least 4 routes, including a detail page with a route parameter, and a 404 page
+- [x] At least 4 routes, including a detail page with a route parameter, and a 404 page
 - [ ] Route guard for the manager-only pages
-- [ ] At least one form with client-side validation and a message under each field
+- [x] At least one form with client-side validation and a message under each field
 - [x] `db.json` shaped like the real API (one array per entity, linked by ids); `json-server` with an `api` script
 - [x] A Pinia store and a service layer (`src/api/http.ts` plus one file per resource) calling the mock API
-- [ ] Loading, empty, error and success states visible
+- [x] Loading, empty, error and success states visible
 - [ ] README section on how to run it (`npm run api`, `npm run dev`)
 - [ ] Work on the `frontend-setup` branch, merged by pull request
 - [ ] Tagged `m1`

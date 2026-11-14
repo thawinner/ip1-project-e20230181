@@ -31,6 +31,13 @@ const router = createRouter({
       component: () => import('@/views/ProductsView.vue'),
       meta: { app: 'products', title: 'Products' },
     },
+    {
+      path: '/products/:id',
+      name: 'product',
+      component: () => import('@/views/ProductDetailView.vue'),
+      props: true,
+      meta: { app: 'products', title: 'Product' },
+    },
 
     // Any other address: the 404 page at that address
     {
