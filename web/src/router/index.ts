@@ -56,6 +56,21 @@ const router = createRouter({
       meta: { app: 'moves', title: 'Move' },
     },
 
+    // Approvals (story 8)
+    {
+      path: '/approvals',
+      name: 'approvals',
+      component: () => import('@/views/ApprovalsView.vue'),
+      meta: { app: 'approvals', managerOnly: true, title: 'To approve' },
+    },
+    {
+      path: '/approvals/history',
+      name: 'approval-history',
+      component: () => import('@/views/MovesView.vue'),
+      props: { fixed: 'writeoff' },
+      meta: { app: 'approvals', managerOnly: true, title: 'Write-off history' },
+    },
+
     // Any other address: the 404 page at that address
     {
       path: '/:pathMatch(.*)*',
