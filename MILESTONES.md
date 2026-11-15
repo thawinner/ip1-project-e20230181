@@ -5,7 +5,7 @@ Checklist and "explain your design" answers for each milestone. Each milestone i
 ## Overview
 
 - [x] M0 Proposal (week 3)
-- [ ] M1 Frontend prototype (week 5)
+- [x] M1 Frontend prototype (week 5)
 - [ ] M2 Backend API (week 7)
 - [ ] M3 Integrated app (week 9)
 - [ ] M4 Feature complete (week 12)
@@ -43,8 +43,8 @@ TODO
 - [x] A Pinia store and a service layer (`src/api/http.ts` plus one file per resource) calling the mock API
 - [x] Loading, empty, error and success states visible
 - [x] README section on how to run it (`npm run api`, `npm run dev`)
-- [ ] Work on the `frontend-setup` branch, merged by pull request
-- [ ] Tagged `m1`
+- [x] Work on the `frontend-setup` branch, merged by pull request
+- [x] Tagged `m1`
 
 **What state lives in the store and what stays inside a component? Why?**
 
