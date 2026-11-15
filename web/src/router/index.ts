@@ -46,6 +46,16 @@ const router = createRouter({
       meta: { app: 'products', title: 'Product' },
     },
 
+    // Moves: a storekeeper sees their own (story 6), the manager everyone's (story 8)
+    { path: '/moves', name: 'moves', component: () => import('@/views/MovesView.vue'), meta: { app: 'moves', title: 'Moves' } },
+    {
+      path: '/moves/:id',
+      name: 'move',
+      component: () => import('@/views/MoveDetailView.vue'),
+      props: true,
+      meta: { app: 'moves', title: 'Move' },
+    },
+
     // Any other address: the 404 page at that address
     {
       path: '/:pathMatch(.*)*',
