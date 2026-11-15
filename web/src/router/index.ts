@@ -39,11 +39,24 @@ const router = createRouter({
       meta: { app: 'products', title: 'Products' },
     },
     {
+      path: '/products/new',
+      name: 'product-new',
+      component: () => import('@/views/ProductFormView.vue'),
+      meta: { app: 'products', managerOnly: true, title: 'New product' },
+    },
+    {
       path: '/products/:id',
       name: 'product',
       component: () => import('@/views/ProductDetailView.vue'),
       props: true,
       meta: { app: 'products', title: 'Product' },
+    },
+    {
+      path: '/products/:id/edit',
+      name: 'product-edit',
+      component: () => import('@/views/ProductFormView.vue'),
+      props: true,
+      meta: { app: 'products', managerOnly: true, title: 'Edit product' },
     },
 
     // Moves: a storekeeper sees their own (story 6), the manager everyone's (story 8)
