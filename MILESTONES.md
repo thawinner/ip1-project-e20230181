@@ -42,7 +42,7 @@ TODO
 - [x] `db.json` shaped like the real API (one array per entity, linked by ids); `json-server` with an `api` script
 - [x] A Pinia store and a service layer (`src/api/http.ts` plus one file per resource) calling the mock API
 - [x] Loading, empty, error and success states visible
-- [ ] README section on how to run it (`npm run api`, `npm run dev`)
+- [x] README section on how to run it (`npm run api`, `npm run dev`)
 - [ ] Work on the `frontend-setup` branch, merged by pull request
 - [ ] Tagged `m1`
 
