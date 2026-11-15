@@ -18,15 +18,34 @@ web (Vue) -> api (NestJS) -> PostgreSQL (Prisma)
 
 ## Run it locally
 
-_Coming soon._
+M1 is the front end only: it talks to a mock API (`json-server` over `web/db.json`) until the NestJS API is ready.
+You need Node.js 22.18 or newer.
+
+```bash
+cd web
+npm install        # once
+npm run api        # terminal 1: mock API on http://localhost:3001
+npm run dev        # terminal 2: the app on http://localhost:5173
+```
+
+`npm run api` saves every change into `web/db.json`; `git checkout web/db.json` brings the demo data back.
+More in `web/README.md` (every screen and its address, the other scripts).
 
 ## Environment variables
 
-_Coming soon._
+- `VITE_API_URL` (web): the API address, default `http://localhost:3001`.
 
 ## Test accounts
 
-_Coming soon._
+Every account uses the password `shopstock1`.
+
+| Username | Role | Notes |
+|---|---|---|
+| `dara` | Manager | Approves write-offs, sees cost prices, reorder list and reports |
+| `sokha` | Staff | Records stock in and out |
+| `vanna` | Staff | A second storekeeper |
+| `rithy` | Staff | Temporary password: must set a new one first |
+| `thida` | Staff | Deactivated: cannot log in |
 
 ## API documentation
 
