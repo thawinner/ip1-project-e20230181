@@ -84,6 +84,56 @@ const router = createRouter({
       meta: { app: 'approvals', managerOnly: true, title: 'Write-off history' },
     },
 
+    // Reorder list and reports (story 9)
+    {
+      path: '/reorder',
+      name: 'reorder',
+      component: () => import('@/views/ReorderView.vue'),
+      meta: { app: 'reorder', managerOnly: true, title: 'Reorder list' },
+    },
+    { path: '/reports', redirect: '/reports/monthly' },
+    {
+      path: '/reports/monthly',
+      name: 'report-monthly',
+      component: () => import('@/views/ReportView.vue'),
+      meta: { app: 'report', managerOnly: true, title: 'Monthly report' },
+    },
+    {
+      path: '/reports/moves-by-product',
+      name: 'report-moves-by-product',
+      component: () => import('@/views/MovesView.vue'),
+      props: { group: 'product' },
+      meta: { app: 'report', managerOnly: true, title: 'Moves by product' },
+    },
+
+    // Staff accounts (stories 1, 10)
+    {
+      path: '/staff',
+      name: 'staff',
+      component: () => import('@/views/StaffView.vue'),
+      meta: { app: 'staff', managerOnly: true, title: 'Staff accounts' },
+    },
+    {
+      path: '/staff/new',
+      name: 'staff-new',
+      component: () => import('@/views/AccountFormView.vue'),
+      meta: { app: 'staff', managerOnly: true, title: 'New account' },
+    },
+    {
+      path: '/staff/:id',
+      name: 'staff-account',
+      component: () => import('@/views/AccountView.vue'),
+      props: true,
+      meta: { app: 'staff', managerOnly: true, title: 'Account' },
+    },
+    {
+      path: '/staff/:id/edit',
+      name: 'staff-edit',
+      component: () => import('@/views/AccountFormView.vue'),
+      props: true,
+      meta: { app: 'staff', managerOnly: true, title: 'Edit account' },
+    },
+
     // Settings: categories and suppliers (story 10)
     { path: '/settings', redirect: '/settings/categories' },
     {
@@ -99,6 +149,20 @@ const router = createRouter({
       component: () => import('@/views/CatalogView.vue'),
       props: { kind: 'suppliers' },
       meta: { app: 'suppliers', managerOnly: true, title: 'Suppliers' },
+    },
+
+    // Your own account (story 1)
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+      meta: { app: 'profile', title: 'My profile' },
+    },
+    {
+      path: '/profile/password',
+      name: 'password',
+      component: () => import('@/views/PasswordView.vue'),
+      meta: { app: 'profile', title: 'Change password' },
     },
 
     // Any other address: the 404 page at that address
@@ -123,6 +187,8 @@ router.beforeEach((to) => {
   }
   // Story 2: you start on the home menu, which shows your role's sections
   if (to.name === 'login' && auth.isLoggedIn) return '/'
+  // Story 1: a temporary password must be replaced before anything else
+  if (auth.mustChangePassword && !to.meta.public && to.name !== 'password') return { name: 'password' }
   accessDenied.value = Boolean(to.meta.managerOnly && !auth.isManager)
 })
 

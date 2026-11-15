@@ -16,7 +16,7 @@ const PHONE_PATTERN = /^0\d{8,9}$/ // Cambodian numbers: 0 and 8 or 9 more digit
 export function checkAccount(input: AccountInput): AccountErrors {
   const errors: AccountErrors = {}
   if (!input.fullName.trim()) errors.fullName = 'Full name is required'
-  if (!USERNAME_PATTERN.test(input.username)) errors.username = 'Username must be 3-20 lowercase letters or numbers'
+  if (!USERNAME_PATTERN.test(input.username)) errors.username = 'Username must be 3–20 lowercase letters or numbers'
   if (!PHONE_PATTERN.test(input.phone.replace(/\s/g, ''))) errors.phone = 'Phone must be 9 or 10 digits and start with 0'
   return errors
 }
