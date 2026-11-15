@@ -23,6 +23,13 @@ const router = createRouter({
     // The home menu (grid button in the top bar)
     { path: '/', name: 'home', component: () => import('@/views/HomeMenuView.vue'), meta: { title: 'Home menu' } },
     { path: '/login', name: 'login', component: LoginView, meta: { public: true, title: 'Log in' } },
+    // Today: one address; it shows the storekeeper's or the manager's view (stories 6, 8)
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { app: 'today', title: 'Today' },
+    },
 
     // Products (stories 3, 4, 5, 7)
     {
