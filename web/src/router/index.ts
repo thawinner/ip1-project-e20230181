@@ -84,6 +84,23 @@ const router = createRouter({
       meta: { app: 'approvals', managerOnly: true, title: 'Write-off history' },
     },
 
+    // Settings: categories and suppliers (story 10)
+    { path: '/settings', redirect: '/settings/categories' },
+    {
+      path: '/settings/categories',
+      name: 'categories',
+      component: () => import('@/views/CatalogView.vue'),
+      props: { kind: 'categories' },
+      meta: { app: 'categories', managerOnly: true, title: 'Categories' },
+    },
+    {
+      path: '/settings/suppliers',
+      name: 'suppliers',
+      component: () => import('@/views/CatalogView.vue'),
+      props: { kind: 'suppliers' },
+      meta: { app: 'suppliers', managerOnly: true, title: 'Suppliers' },
+    },
+
     // Any other address: the 404 page at that address
     {
       path: '/:pathMatch(.*)*',
