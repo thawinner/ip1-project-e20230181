@@ -1,0 +1,520 @@
+/* ShopStock base styles: design tokens and a few global rules.
+   Component styles live in each .vue file (<style scoped>). */
+
+:root {
+  /* Ground and panels */
+  --bg: #eef0f2; /* page background */
+  --surface: #ffffff; /* panels, cards */
+  --surface-2: #f8f9fb; /* table heads, hover */
+  --border: #dfe2e7;
+  --input-border: #c3c8cf;
+
+  /* Text */
+  --ink: #16191d;
+  --ink-2: #353b45;
+  --muted: #5a616c; /* 6.2:1 on white */
+
+  /* Accent: the logo blue, for actions and "you are here" */
+  --accent: #004aad; /* white on it 8.1:1 */
+  --accent-hover: #003b8a;
+  --accent-soft: #eaf1fb;
+  --nav-bg: #13213d; /* top bar and home band: deep navy, white on it 15:1 */
+  --nav-fg: #ffffff;
+
+  /* Status colours: green = done, amber = needs attention, red = error */
+  --success-bg: #e7f5ec;
+  --success-fg: #1b6b3a;
+  --low-bg: #fff3dc;
+  --low-fg: #7a4100;
+  --danger-bg: #fcedeb;
+  --danger-fg: #9f1d14;
+  --danger-line: #d0453a;
+  --info-bg: #eaf1fb;
+  --info-fg: #003b8a;
+  --attention: #b45309; /* count badges */
+
+  /* Stock in / out */
+  --in-bg: #e7f5ec;
+  --in-fg: #1b6b3a;
+  --out-bg: #fceee2;
+  --out-fg: #8a4300;
+
+  /* Shape and type */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 10px;
+  --shadow: 0 4px 12px rgba(22, 25, 29, 0.12); /* dialogs and dropdowns only */
+  --font: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --ctl: 40px; /* control height; 44px on touch screens */
+  --top: 56px; /* top bar height */
+  --page-max: 1440px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --ctl: 44px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink-2);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+a {
+  color: var(--accent);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* One colour per app (home menu tiles, section icon); white icons on each are at least 4.5:1 */
+:root {
+  --app-today: #1f6fb2;
+  --app-products: #b4521a;
+  --app-moves: #0e7466;
+  --app-approvals: #8a3a78;
+  --app-reorder: #9a5a0a;
+  --app-report: #3a55a0;
+  --app-staff: #5a4a9e;
+  --app-categories: #9e3646;
+  --app-suppliers: #2e6b3c;
+  --app-profile: #4a5563;
+  --nav-soft: #b9c3d6;
+  --nav-accent: #8db5ee; /* "Stock" in the brand name, on navy */
+  --nav-hover: rgba(255, 255, 255, 0.14);
+  --nav-active: rgba(255, 255, 255, 0.22);
+  --nav-line: rgba(255, 255, 255, 0.28);
+  --row: #eceef1;
+  --accent-line: #b9cdea;
+  --faint: #8a919c;
+  --card-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 0 0 1px rgba(16, 24, 40, 0.04);
+  --side-w: 360px; /* right column on record pages */
+  --success-line: #2e9e5b;
+  --low-line: #d9822b;
+  --adj-bg: #efebf7;
+  --adj-fg: #4f3f84;
+  --chart-in: #2f6fcb;
+  --chart-out: #e8913a;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --side-w: 320px;
+  }
+}
+
+/* ---------- Shared pieces used by many components ---------- */
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 16px;
+  }
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+}
+
+/* White band under the top bar: a page's toolbar or its title */
+.page-band {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-band-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+@media (max-width: 720px) {
+  .page-band-inner {
+    padding: 12px 16px;
+  }
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--ctl);
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.1);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-outline {
+  border-color: #c9ced6;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.05);
+}
+
+.btn-outline:hover {
+  background: var(--surface-2);
+  border-color: var(--muted);
+}
+
+.btn-danger {
+  background: var(--danger-fg);
+  color: #fff;
+}
+
+.btn-success {
+  background: var(--success-fg);
+  color: #fff;
+}
+
+.btn-link {
+  background: none;
+  color: var(--accent);
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.btn-sm {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 22px;
+  white-space: nowrap;
+  background: var(--row);
+  color: var(--ink-2);
+}
+
+.badge.ok,
+.badge.in {
+  background: var(--in-bg);
+  color: var(--in-fg);
+}
+
+.badge.out {
+  background: var(--out-bg);
+  color: var(--out-fg);
+}
+
+.badge.adj {
+  background: var(--adj-bg);
+  color: var(--adj-fg);
+}
+
+.badge.warn {
+  background: var(--low-bg);
+  color: var(--low-fg);
+}
+
+.badge.danger {
+  background: var(--danger-bg);
+  color: var(--danger-fg);
+}
+
+.input {
+  width: 100%;
+  min-height: var(--ctl);
+  padding: 0 12px;
+  border: 1px solid #c9ced6;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+textarea.input {
+  min-height: 88px;
+  padding: 8px 12px;
+  resize: vertical;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--danger-fg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--row);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table th {
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.table .num {
+  text-align: right;
+}
+
+/* Tick box column: the label is a 40px hit area around the small box */
+.table .sel {
+  width: 36px;
+  padding-right: 0;
+}
+
+.table .hit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  margin: -10px -8px;
+  cursor: pointer;
+}
+
+.table .hit input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* "2 selected  Unselect" in the toolbar, before the bulk buttons */
+.selection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Small picture next to a product; a box icon until products have photos */
+.thumb {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tabs button {
+  position: relative;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  color: var(--ink);
+}
+
+.tabs button[aria-selected='true'] {
+  color: var(--accent-hover);
+}
+
+.tabs button[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.table-wrap {
+  position: relative; /* keeps screen-reader-only labels inside, so they cannot widen the page */
+  overflow-x: auto;
+}
+
+/* Buttons in the blue top bar (used by several top bar components) */
+.nav-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  min-width: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--nav-fg);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-btn:hover,
+.nav-btn[aria-expanded='true'] {
+  background: var(--nav-hover);
+}
+
+.nav-btn[aria-current='page'] {
+  background: transparent;
+  box-shadow: inset 0 -3px 0 #5b9bf0;
+  border-radius: 0;
+}
+
+.nav-btn:focus-visible {
+  outline-color: #fff;
+}
+
+.nav-btn .count {
+  box-shadow: 0 0 0 2px var(--nav-bg);
+}
+
+/* Links inside tables: no underline until you point at them */
+.table a {
+  text-decoration: none;
+}
+
+.table a:hover {
+  text-decoration: underline;
+}
+
+/* Printing: no top bar, buttons or messages; white paper */
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .topbar,
+  .toast,
+  .no-print {
+    display: none !important;
+  }
+
+  .panel {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

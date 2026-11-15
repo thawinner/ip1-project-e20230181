@@ -1,0 +1,205 @@
+import { ref } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import type { AppId } from '@/apps'
+import { rememberVisit } from '@/utils/lastVisit'
+import LoginView from '@/views/LoginView.vue'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    public?: boolean // open without logging in
+    managerOnly?: boolean // staff see the access error instead (story 10)
+    app?: AppId // the section shown in the top bar
+    title?: string // the browser tab: "ShopStock · Products"
+  }
+}
+
+// Addresses name the thing, not the role: /products/1/edit, /approvals. Who may open a page is checked by the
+// guard below (meta.managerOnly), the same way the API checks the role, so one page never has two addresses.
+// Filters are named in the query: /products?stock=low, /moves?status=pending.
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    // The home menu (grid button in the top bar)
+    { path: '/', name: 'home', component: () => import('@/views/HomeMenuView.vue'), meta: { title: 'Home menu' } },
+    { path: '/login', name: 'login', component: LoginView, meta: { public: true, title: 'Log in' } },
+    // Today: one address; it shows the storekeeper's or the manager's view (stories 6, 8)
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { app: 'today', title: 'Today' },
+    },
+
+    // Products (stories 3, 4, 5, 7)
+    {
+      path: '/products',
+      name: 'products',
+      component: () => import('@/views/ProductsView.vue'),
+      meta: { app: 'products', title: 'Products' },
+    },
+    {
+      path: '/products/new',
+      name: 'product-new',
+      component: () => import('@/views/ProductFormView.vue'),
+      meta: { app: 'products', managerOnly: true, title: 'New product' },
+    },
+    {
+      path: '/products/:id',
+      name: 'product',
+      component: () => import('@/views/ProductDetailView.vue'),
+      props: true,
+      meta: { app: 'products', title: 'Product' },
+    },
+    {
+      path: '/products/:id/edit',
+      name: 'product-edit',
+      component: () => import('@/views/ProductFormView.vue'),
+      props: true,
+      meta: { app: 'products', managerOnly: true, title: 'Edit product' },
+    },
+
+    // Moves: a storekeeper sees their own (story 6), the manager everyone's (story 8)
+    { path: '/moves', name: 'moves', component: () => import('@/views/MovesView.vue'), meta: { app: 'moves', title: 'Moves' } },
+    {
+      path: '/moves/:id',
+      name: 'move',
+      component: () => import('@/views/MoveDetailView.vue'),
+      props: true,
+      meta: { app: 'moves', title: 'Move' },
+    },
+
+    // Approvals (story 8)
+    {
+      path: '/approvals',
+      name: 'approvals',
+      component: () => import('@/views/ApprovalsView.vue'),
+      meta: { app: 'approvals', managerOnly: true, title: 'To approve' },
+    },
+    {
+      path: '/approvals/history',
+      name: 'approval-history',
+      component: () => import('@/views/MovesView.vue'),
+      props: { fixed: 'writeoff' },
+      meta: { app: 'approvals', managerOnly: true, title: 'Write-off history' },
+    },
+
+    // Reorder list and reports (story 9)
+    {
+      path: '/reorder',
+      name: 'reorder',
+      component: () => import('@/views/ReorderView.vue'),
+      meta: { app: 'reorder', managerOnly: true, title: 'Reorder list' },
+    },
+    { path: '/reports', redirect: '/reports/monthly' },
+    {
+      path: '/reports/monthly',
+      name: 'report-monthly',
+      component: () => import('@/views/ReportView.vue'),
+      meta: { app: 'report', managerOnly: true, title: 'Monthly report' },
+    },
+    {
+      path: '/reports/moves-by-product',
+      name: 'report-moves-by-product',
+      component: () => import('@/views/MovesView.vue'),
+      props: { group: 'product' },
+      meta: { app: 'report', managerOnly: true, title: 'Moves by product' },
+    },
+
+    // Staff accounts (stories 1, 10)
+    {
+      path: '/staff',
+      name: 'staff',
+      component: () => import('@/views/StaffView.vue'),
+      meta: { app: 'staff', managerOnly: true, title: 'Staff accounts' },
+    },
+    {
+      path: '/staff/new',
+      name: 'staff-new',
+      component: () => import('@/views/AccountFormView.vue'),
+      meta: { app: 'staff', managerOnly: true, title: 'New account' },
+    },
+    {
+      path: '/staff/:id',
+      name: 'staff-account',
+      component: () => import('@/views/AccountView.vue'),
+      props: true,
+      meta: { app: 'staff', managerOnly: true, title: 'Account' },
+    },
+    {
+      path: '/staff/:id/edit',
+      name: 'staff-edit',
+      component: () => import('@/views/AccountFormView.vue'),
+      props: true,
+      meta: { app: 'staff', managerOnly: true, title: 'Edit account' },
+    },
+
+    // Settings: categories and suppliers (story 10)
+    { path: '/settings', redirect: '/settings/categories' },
+    {
+      path: '/settings/categories',
+      name: 'categories',
+      component: () => import('@/views/CatalogView.vue'),
+      props: { kind: 'categories' },
+      meta: { app: 'categories', managerOnly: true, title: 'Categories' },
+    },
+    {
+      path: '/settings/suppliers',
+      name: 'suppliers',
+      component: () => import('@/views/CatalogView.vue'),
+      props: { kind: 'suppliers' },
+      meta: { app: 'suppliers', managerOnly: true, title: 'Suppliers' },
+    },
+
+    // Your own account (story 1)
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+      meta: { app: 'profile', title: 'My profile' },
+    },
+    {
+      path: '/profile/password',
+      name: 'password',
+      component: () => import('@/views/PasswordView.vue'),
+      meta: { app: 'profile', title: 'Change password' },
+    },
+
+    // Any other address: the 404 page at that address
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue'),
+      meta: { title: 'Not found' },
+    },
+  ],
+})
+
+// Story 10: a storekeeper on a manager page sees the access error at that same address (App.vue shows it),
+// like the 404 page, instead of being sent to another address
+export const accessDenied = ref(false)
+
+router.beforeEach((to) => {
+  const auth = useAuthStore()
+
+  if (!to.meta.public && !auth.isLoggedIn) {
+    return { name: 'login', query: to.fullPath === '/' ? {} : { redirect: to.fullPath } }
+  }
+  // Story 2: you start on the home menu, which shows your role's sections
+  if (to.name === 'login' && auth.isLoggedIn) return '/'
+  // Story 1: a temporary password must be replaced before anything else
+  if (auth.mustChangePassword && !to.meta.public && to.name !== 'password') return { name: 'password' }
+  accessDenied.value = Boolean(to.meta.managerOnly && !auth.isManager)
+})
+
+// The product page puts the product's name in the title once it has loaded
+router.afterEach((to) => {
+  document.title = `ShopStock · ${accessDenied.value ? 'Access error' : (to.meta.title ?? 'Inventory')}`
+  const auth = useAuthStore()
+  const id = Number(to.params.id)
+  if ((to.name === 'product' || to.name === 'move') && Number.isInteger(id) && auth.user) {
+    rememberVisit({ kind: to.name, id, userId: auth.user.id })
+  }
+})
+
+export default router
